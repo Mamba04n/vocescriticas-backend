@@ -1,5 +1,13 @@
 <?php
 
+$appKey = trim((string) env('APP_KEY', ''));
+$appKey = trim($appKey, "\"'");
+
+if (str_starts_with($appKey, 'base64:')) {
+    $encoded = preg_replace('/\s+/', '', substr($appKey, 7));
+    $appKey = 'base64:'.$encoded;
+}
+
 return [
 
     /*
@@ -97,7 +105,7 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
-    'key' => env('APP_KEY'),
+    'key' => $appKey,
 
     'previous_keys' => [
         ...array_filter(
