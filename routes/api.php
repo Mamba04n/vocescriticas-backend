@@ -36,6 +36,7 @@ Route::middleware(["auth:sanctum"])->group(function () {
     Route::get("/feed", [FeedController::class, "index"]);
 
     Route::post("/posts", [PostController::class, "store"]);
+    Route::delete("/posts/{post}", [PostController::class, "destroy"]);
     Route::post("/posts/{post}/verify", [PostController::class, "verify"]);
     Route::post("/posts/{post}/like", [LikeController::class, "toggle"]);
     Route::post("/posts/{post}/comments", [CommentController::class, "store"]); 

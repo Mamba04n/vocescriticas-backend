@@ -20,7 +20,7 @@ class SubmissionController extends Controller
             'file' => 'required|file|max:15360', // MÃ¡x 15MB
         ]);
 
-        $path = $request->file('file')->store('submissions', 'public');
+        $path = $request->file('file')->store('submissions', config('filesystems.default', 'public'));
 
         $submission = Submission::updateOrCreate(
             ['evaluation_id' => $evaluation->id, 'user_id' => $request->user()->id],

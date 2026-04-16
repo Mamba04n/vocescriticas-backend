@@ -22,12 +22,12 @@ class ProfileController extends Controller
         }
 
         if ($request->hasFile('avatar')) {
-            $path = $request->file('avatar')->store('avatars', 'public');
+            $path = $request->file('avatar')->store('avatars', config('filesystems.default', 'public'));
             $user->avatar_url = $path;
         }
 
         if ($request->hasFile('cover')) {
-            $path = $request->file('cover')->store('covers', 'public');
+            $path = $request->file('cover')->store('covers', config('filesystems.default', 'public'));
             $user->cover_url = $path;
         }
 

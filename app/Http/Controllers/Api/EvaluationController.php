@@ -38,7 +38,7 @@ class EvaluationController extends Controller
         ];
 
         if ($request->hasFile('file')) {
-            $data['file_path'] = $request->file('file')->store('evaluations', 'public');
+            $data['file_path'] = $request->file('file')->store('evaluations', config('filesystems.default', 'public'));
         }
 
         $evaluation = $group->evaluations()->create($data);

@@ -33,7 +33,7 @@ class GroupController extends Controller
         try { $group->invite_code = $inviteCode; } catch (\Exception $e) {}
 
         if ($request->hasFile('cover')) {
-            $group->cover_url = $request->file('cover')->store('groups/covers', 'public');
+            $group->cover_url = $request->file('cover')->store('groups/covers', config('filesystems.default', 'public'));
         }
 
         $group->save();

@@ -9,12 +9,15 @@ use App\Models\Tag;
 use App\Jobs\ProcessPostFile;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
     public function store(StorePostRequest $request): JsonResponse
     {
         $validated = $request->validated();
+        $disk = config('filesystems.default', 'public');
         
         $post = new Post();
         $post->user_id = $request->user()->id;
@@ -27,7 +30,7 @@ class PostController extends Controller
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $path = $file->store('investigations', 'public');
+            $path = $file->store('investigations', $disk);
             
             $post->file_path = $path;
             $post->file_name = $file->getClientOriginalName();
@@ -63,6 +66,30 @@ class PostController extends Controller
             'data' => $post->load(['tags', 'author']),
             'errors' => null,
         ], 201);
+    }
+
+    public function destroy(Request $request, Post $post): JsonResponse
+    {
+        $isOwner = $post->user_id === $request->user()->id;
+        $isAdmin = (bool) ($request->user()->is_admin ?? false);
+
+        if (!$isOwner && !$isAdmin) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No autorizado para eliminar esta publicación.',
+            ], 403);
+        }
+
+        if ($post->file_path) {
+            Storage::disk(config('filesystems.default', 'public'))->delete($post->file_path);
+        }
+
+        $post->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Publicación eliminada correctamente.',
+        ]);
     }
 
     public function verify(Post $post)
