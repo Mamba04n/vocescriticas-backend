@@ -10,7 +10,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->statefulApi();
+        // This API authenticates with bearer tokens returned by /login and /register.
+        // Disabling stateful API middleware avoids CSRF 419 on cross-origin SPA auth calls.
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
