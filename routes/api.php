@@ -17,9 +17,11 @@ use App\Http\Controllers\Api\BookmarkController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\EvaluationController;
 use App\Http\Controllers\Api\SubmissionController;
+use App\Http\Controllers\Api\SetupController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/setup/delete-user', [SetupController::class, 'deleteUser']);
 
 Route::middleware(["auth:sanctum"])->group(function () {
     Route::get("/user", function (Request $request) { return $request->user(); });
