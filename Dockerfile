@@ -33,6 +33,6 @@ RUN chown -R www-data:www-data storage bootstrap/cache
 
 EXPOSE 80
 
-# Al iniciar el contenedor, limpiar config/rutas/vistas sin tocar cache-store de DB,
+# Al iniciar el contenedor, limpiar config y rutas sin tocar cache-store de DB,
 # ejecutar migraciones y luego iniciar Apache.
-CMD php artisan config:clear && php artisan route:clear && php artisan view:clear && php artisan migrate --force && apache2-foreground
+CMD php artisan config:clear && php artisan route:clear && php artisan migrate --force && apache2-foreground
