@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 $frontendUrl = rtrim((string) env('FRONTEND_URL', 'https://frontend-nu-nine-65.vercel.app'), '/');
 
