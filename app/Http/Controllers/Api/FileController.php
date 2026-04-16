@@ -27,12 +27,34 @@ class FileController extends Controller
         return (string) config('filesystems.default', 'public');
     }
 
+    private function resolveDiskForPath(string $path): string
+    {
+        $candidates = array_values(array_unique([
+            $this->diskName(),
+            'public',
+            'local',
+            's3',
+        ]));
+
+        foreach ($candidates as $diskName) {
+            try {
+                if (Storage::disk($diskName)->exists($path)) {
+                    return $diskName;
+                }
+            } catch (\Throwable $e) {
+                // Ignore unavailable disk drivers and continue trying fallbacks.
+            }
+        }
+
+        return $this->diskName();
+    }
+
     public function open(Request $request): StreamedResponse
     {
         $path = $this->normalizedPath($request);
         abort_if(!$path, 404, 'Archivo no encontrado.');
 
-        $disk = Storage::disk($this->diskName());
+        $disk = Storage::disk($this->resolveDiskForPath($path));
         abort_if(!$disk->exists($path), 404, 'Archivo no encontrado.');
 
         $mime = $disk->mimeType($path) ?: 'application/octet-stream';
@@ -48,7 +70,7 @@ class FileController extends Controller
         $path = $this->normalizedPath($request);
         abort_if(!$path, 404, 'Archivo no encontrado.');
 
-        $disk = Storage::disk($this->diskName());
+        $disk = Storage::disk($this->resolveDiskForPath($path));
         abort_if(!$disk->exists($path), 404, 'Archivo no encontrado.');
 
         return $disk->download($path, basename($path));
