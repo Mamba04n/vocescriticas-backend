@@ -1,11 +1,11 @@
 ﻿<?php
 
+$frontendUrl = rtrim((string) env('FRONTEND_URL', 'https://frontend-nu-nine-65.vercel.app'), '/');
+
 return [
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
     'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    'allowed_origins' => array_values(array_filter([
-        env('FRONTEND_URL'),
-    ])),
+    'allowed_origins' => [$frontendUrl],
     'allowed_origins_patterns' => [],
     'allowed_headers' => [
         'Accept',
