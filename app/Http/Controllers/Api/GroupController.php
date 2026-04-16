@@ -18,8 +18,10 @@ class GroupController extends Controller
             'cover' => 'nullable|image|max:10240',
         ]);
 
-        // Generate dynamic invite code
-        $inviteCode = Str::random(8);
+        // Generate dynamic invite code in uppercase for easier sharing/copying
+        do {
+            $inviteCode = Str::upper(Str::random(8));
+        } while (Group::whereRaw('LOWER(invite_code) = ?', [strtolower($inviteCode)])->exists());
 
         $group = new Group([
             'name' => $validated['name'],
@@ -87,7 +89,9 @@ class GroupController extends Controller
 
     public function join(Request $request, $code)
     {
-        $group = Group::where('invite_code', $code)->first();
+        $normalizedCode = strtoupper(trim((string) $code));
+
+        $group = Group::whereRaw('UPPER(invite_code) = ?', [$normalizedCode])->first();
         if (!$group) {
             return response()->json(['message' => 'CÃƒÆ’Ã‚Â³digo de invitaciÃƒÆ’Ã‚Â³n invÃƒÆ’Ã‚Â¡lido o grupo no encontrado.'], 404);
         }
