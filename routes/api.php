@@ -18,11 +18,14 @@ use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\EvaluationController;
 use App\Http\Controllers\Api\SubmissionController;
 use App\Http\Controllers\Api\SetupController;
+use App\Http\Controllers\Api\FileController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/setup/delete-user', [SetupController::class, 'deleteUser']);
 Route::post('/setup/create-superuser', [SetupController::class, 'createSuperUser']);
+Route::get('/files/open', [FileController::class, 'open']);
+Route::get('/files/download', [FileController::class, 'download']);
 
 Route::middleware(["auth:sanctum"])->group(function () {
     Route::get("/user", function (Request $request) { return $request->user(); });
