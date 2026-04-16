@@ -4,29 +4,6 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
-// Optional emergency debug toggle for production troubleshooting.
-if (getenv('FORCE_DEBUG_ON_RENDER') === 'true') {
-    putenv('APP_DEBUG=true');
-    $_ENV['APP_DEBUG'] = 'true';
-    $_SERVER['APP_DEBUG'] = 'true';
-}
-
-$allowedOrigin = rtrim((string) (getenv('FRONTEND_URL') ?: 'https://frontend-nu-nine-65.vercel.app'), '/');
-$origin = rtrim((string) ($_SERVER['HTTP_ORIGIN'] ?? ''), '/');
-
-if ($origin !== '' && $origin === $allowedOrigin) {
-    header('Access-Control-Allow-Origin: '.$allowedOrigin);
-    header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
-    header('Access-Control-Allow-Headers: Accept, Authorization, Content-Type, Origin, X-Requested-With, X-CSRF-TOKEN, X-XSRF-TOKEN');
-    header('Vary: Origin');
-}
-
-if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
-    http_response_code(204);
-    exit;
-}
-
 if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
     require $maintenance;
 }
