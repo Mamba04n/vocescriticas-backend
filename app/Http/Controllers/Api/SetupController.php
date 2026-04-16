@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class SetupController extends Controller
 {
@@ -52,5 +53,33 @@ class SetupController extends Controller
                 'carnet' => $userCarnet,
             ],
         ]);
+    }
+
+    public function createSuperUser(Request $request): JsonResponse
+    {
+        if (!$this->isAuthorized($request)) {
+            return response()->json(['message' => 'No autorizado'], 403);
+        }
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:120',
+            'carnet' => 'required|string|unique:users,carnet',
+            'email' => 'nullable|email|unique:users,email',
+            'password' => 'required|string|min:8',
+        ]);
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'carnet' => $validated['carnet'],
+            'email' => $validated['email'] ?? null,
+            'password' => Hash::make($validated['password']),
+            'role' => 'teacher',
+            'is_admin' => true,
+        ]);
+
+        return response()->json([
+            'message' => 'Superusuario creado correctamente.',
+            'user' => $user,
+        ], 201);
     }
 }
