@@ -4,6 +4,13 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
+// Optional emergency debug toggle for production troubleshooting.
+if (getenv('FORCE_DEBUG_ON_RENDER') === 'true') {
+    putenv('APP_DEBUG=true');
+    $_ENV['APP_DEBUG'] = 'true';
+    $_SERVER['APP_DEBUG'] = 'true';
+}
+
 $allowedOrigin = rtrim((string) (getenv('FRONTEND_URL') ?: 'https://frontend-nu-nine-65.vercel.app'), '/');
 $origin = rtrim((string) ($_SERVER['HTTP_ORIGIN'] ?? ''), '/');
 
