@@ -1,1 +1,0 @@
-<?php require __DIR__."/vendor/autoload.php"; $app = require_once __DIR__."/bootstrap/app.php"; $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap(); try { $group = new App\Models\Group(["name" => "test", "description" => "desc", "created_by" => 1]); $group->save(); echo "success"; } catch (\Exception $e) { echo $e->getMessage(); }

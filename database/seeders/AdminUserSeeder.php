@@ -11,12 +11,13 @@ class AdminUserSeeder extends Seeder
     public function run()
     {
         User::updateOrCreate(
-            ['carnet' => 'ADMIN-0000'],
+            ['carnet' => 'CLARA-0001'],
             [
-                'name' => 'Superadmin',
-                'carnet' => 'ADMIN-0000',
-                'email' => 'admin@admin.com',
-                'password' => Hash::make('admin1234'),
+                'name' => 'Clara Wilford',
+                'carnet' => 'CLARA-0001',
+                'email' => 'clara.wilford@vocescriticas.com',
+                'password' => Hash::make(env('CLARA_SUPERUSER_PASSWORD', 'Clara2026!')),
+                'role' => 'teacher',
                 'is_admin' => true,
             ]
         );
