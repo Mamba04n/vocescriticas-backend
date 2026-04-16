@@ -12,7 +12,7 @@ class SetupController extends Controller
 {
     private function isAuthorized(Request $request): bool
     {
-        $expected = (string) env('ADMIN_SETUP_SECRET', '');
+        $expected = (string) config('app.admin_setup_secret', '');
         $provided = (string) $request->header('X-Setup-Secret', '');
 
         return $expected !== '' && hash_equals($expected, $provided);
